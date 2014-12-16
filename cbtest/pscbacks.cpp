@@ -39,7 +39,7 @@ VOID LoadImageNotifyRoutine(IN PUNICODE_STRING FullImageName, IN HANDLE ProcessI
 
     UNREFERENCED_PARAMETER(ImageInfo);
 
-    DbgPrint("LoadImageNotifyRoutine called with FullImageName = %wZ, ProcessId = 0x%08X\n", FullImageName, ProcessId);
+    DbgPrint("LoadImageNotifyRoutine called with FullImageName = %wZ, ProcessId = 0x%p\n", FullImageName, ProcessId);
 }
 //////////////////////////////////////////////////////////////////////////
 
@@ -66,7 +66,7 @@ NTSTATUS SetRemoveCreateProcessNotifyRoutine(IN BOOLEAN IsRemove) {
 VOID CreateProcessNotifyRoutine(IN HANDLE ParentId, IN HANDLE ProcessId, IN BOOLEAN Create) {
     PAGED_CODE();
 
-    DbgPrint("CreateProcessNotifyRoutine called with ParentId = 0x%08X, ProcessId = 0x%08X, Create = %d\n",
+    DbgPrint("CreateProcessNotifyRoutine called with ParentId = 0x%p, ProcessId = 0x%p, Create = %d\n",
              ParentId,
              ProcessId,
              Create);
@@ -79,7 +79,7 @@ VOID CreateProcessNotifyRoutineEx(IN OUT PEPROCESS Process,
 
     UNREFERENCED_PARAMETER(CreateInfo);
 
-    DbgPrint("CreateProcessNotifyRoutineEx called with Process = 0x%08X, ProcessId = 0x%08X\n",
+    DbgPrint("CreateProcessNotifyRoutineEx called with Process = 0x%p, ProcessId = 0x%p\n",
              Process,
              ProcessId);
 }
@@ -98,7 +98,7 @@ NTSTATUS SetCreateThreadNotifyRoutine(IN PCREATE_THREAD_NOTIFY_ROUTINE NotifyRou
 VOID CreateThreadNotifyRoutine(IN HANDLE ProcessId, IN HANDLE ThreadId, IN BOOLEAN Create) {
     PAGED_CODE();
 
-    DbgPrint("CreateThreadNotifyRoutine called with ProcessId = 0x%08X, ThreadId = 0x%08X, Create = %d\n",
+    DbgPrint("CreateThreadNotifyRoutine called with ProcessId = 0x%p, ThreadId = 0x%p, Create = %d\n",
              ProcessId,
              ThreadId,
              Create);

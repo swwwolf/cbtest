@@ -12,8 +12,8 @@ extern "C" PUSHORT NtBuildNumber;
 extern "C" {
 #endif
 
-    NTSTATUS NTAPI DriverEntry(IN PDRIVER_OBJECT driver, IN PUNICODE_STRING driverKeyName);
-    void     NTAPI DriverUnload(IN PDRIVER_OBJECT driver);
+    DRIVER_INITIALIZE DriverEntry;
+    void NTAPI        DriverUnload(IN PDRIVER_OBJECT driver);
 
 #ifdef __cplusplus
 }

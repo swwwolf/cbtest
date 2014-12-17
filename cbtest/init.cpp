@@ -13,7 +13,6 @@
 NTSTATUS NTAPI DriverEntry(IN PDRIVER_OBJECT driver, IN PUNICODE_STRING driverKeyName) {
     NTSTATUS status;
 
-    UNREFERENCED_PARAMETER(driver);
     UNREFERENCED_PARAMETER(driverKeyName);
 
     // DbgBreakPoint();
@@ -38,6 +37,8 @@ NTSTATUS NTAPI DriverEntry(IN PDRIVER_OBJECT driver, IN PUNICODE_STRING driverKe
         DbgPrint("Failed to set create thread notify routine, status = 0x%08X\n", status);
     else
         DbgPrint("Succeed to set create thread notify routine, status = 0x%08X\n", status);
+
+    driver->DriverUnload = DriverUnload;
 
     return STATUS_SUCCESS;
 }

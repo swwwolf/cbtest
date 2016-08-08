@@ -7,6 +7,15 @@ typedef NTSTATUS (NTAPI* PSSETCREATEPROCESSNOTIFYROUTINEEX_PROC)(
     IN PCREATE_PROCESS_NOTIFY_ROUTINE_EX NotifyRoutine,
     IN BOOLEAN Remove);
 
+typedef enum _PSCREATEPROCESSNOTIFYTYPE {
+    PsCreateProcessNotifyPico = 0
+} PSCREATEPROCESSNOTIFYTYPE;
+
+typedef NTSTATUS (NTAPI* PSSETCREATEPROCESSNOTIFYROUTINEEX2_PROC)(
+    IN PSCREATEPROCESSNOTIFYTYPE NotifyType,
+    IN PVOID NotifyInformation,
+    IN BOOLEAN Remove);
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -21,6 +30,8 @@ extern "C" {
     VOID     CreateProcessNotifyRoutine(IN HANDLE ParentId, IN HANDLE ProcessId, IN BOOLEAN Create);
     VOID     CreateProcessNotifyRoutineEx(IN OUT PEPROCESS Process, IN HANDLE ProcessId,
                                           IN OPTIONAL PPS_CREATE_NOTIFY_INFO CreateInfo);
+    VOID     CreateProcessNotifyRoutineEx2(IN OUT PEPROCESS Process, IN HANDLE ProcessId,
+                                           IN OPTIONAL PPS_CREATE_NOTIFY_INFO CreateInfo);
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////

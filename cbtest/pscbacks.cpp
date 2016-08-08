@@ -45,20 +45,33 @@ VOID LoadImageNotifyRoutine(IN PUNICODE_STRING FullImageName, IN HANDLE ProcessI
 
 //////////////////////////////////////////////////////////////////////////
 NTSTATUS SetRemoveCreateProcessNotifyRoutine(IN BOOLEAN IsRemove) {
-    NTSTATUS                               status;
-    PSSETCREATEPROCESSNOTIFYROUTINEEX_PROC pCreateProcessEx  = NULL;
+    NTSTATUS status;
 
     PAGED_CODE();
 
     DECLARE_CONST_UNICODE_STRING(szCreateProcessEx, L"PsSetCreateProcessNotifyRoutineEx");
 
-    pCreateProcessEx = (PSSETCREATEPROCESSNOTIFYROUTINEEX_PROC)\
+    PSSETCREATEPROCESSNOTIFYROUTINEEX_PROC pCreateProcessEx = (PSSETCREATEPROCESSNOTIFYROUTINEEX_PROC)
         MmGetSystemRoutineAddress((PUNICODE_STRING)&szCreateProcessEx);
 
     if ( pCreateProcessEx )
         status = pCreateProcessEx(CreateProcessNotifyRoutineEx, IsRemove);
     else
         status = PsSetCreateProcessNotifyRoutine(CreateProcessNotifyRoutine, IsRemove);
+
+    if ( !NT_SUCCESS(status) )
+        DbgPrint("%s:%d failed with status = 0x%08X\n", __FUNCTION__, __LINE__, status);
+
+    DECLARE_CONST_UNICODE_STRING(szCreateProcessEx2, L"PsSetCreateProcessNotifyRoutineEx2");
+
+    PSSETCREATEPROCESSNOTIFYROUTINEEX2_PROC pCreateProcessEx2 = (PSSETCREATEPROCESSNOTIFYROUTINEEX2_PROC)
+        MmGetSystemRoutineAddress((PUNICODE_STRING)&szCreateProcessEx2);
+
+    if ( pCreateProcessEx2 )
+        status = pCreateProcessEx2(PsCreateProcessNotifyPico, CreateProcessNotifyRoutineEx2, IsRemove);
+
+    if ( !NT_SUCCESS(status) )
+        DbgPrint("%s:%d failed with status = 0x%08X\n", __FUNCTION__, __LINE__, status);
 
     return status;
 }
@@ -77,11 +90,35 @@ VOID CreateProcessNotifyRoutineEx(IN OUT PEPROCESS Process,
                                   IN OPTIONAL PPS_CREATE_NOTIFY_INFO CreateInfo) {
     PAGED_CODE();
 
-    UNREFERENCED_PARAMETER(CreateInfo);
+    if ( CreateInfo ) {
+        DbgPrint("%s called with Process = 0x%p, ProcessId = 0x%p, ImageFileName = %wZ, CommandLine = %wZ\n",
+                 __FUNCTION__,
+                 Process,
+                 ProcessId,
+                 CreateInfo->ImageFileName,
+                 CreateInfo->CommandLine);
+    } else {
+        DbgPrint("%s called with Process = 0x%p, ProcessId = 0x%p\n", __FUNCTION__, Process, ProcessId);
+    }
+}
 
-    DbgPrint("CreateProcessNotifyRoutineEx called with Process = 0x%p, ProcessId = 0x%p\n",
-             Process,
-             ProcessId);
+VOID CreateProcessNotifyRoutineEx2(IN OUT PEPROCESS Process,
+                                   IN HANDLE ProcessId,
+                                   IN OPTIONAL PPS_CREATE_NOTIFY_INFO CreateInfo) {
+    PAGED_CODE();
+
+    DbgBreakPoint();
+
+    if ( CreateInfo ) {
+        DbgPrint("%s called with Process = 0x%p, ProcessId = 0x%p, ImageFileName = %wZ, CommandLine = %wZ\n",
+                 __FUNCTION__,
+                 Process,
+                 ProcessId,
+                 CreateInfo->ImageFileName,
+                 CreateInfo->CommandLine);
+    } else {
+        DbgPrint("%s called with Process = 0x%p, ProcessId = 0x%p\n", __FUNCTION__, Process, ProcessId);
+    }
 }
 //////////////////////////////////////////////////////////////////////////
 

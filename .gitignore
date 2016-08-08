@@ -4,7 +4,9 @@
 # User-specific files
 *.suo
 *.user
+*.userosscache
 *.sln.docstates
+*.zip
 
 # Visual Lint files
 Visual Lint/
@@ -13,16 +15,35 @@ Visual Lint/
 *.vlconfig
 
 # Build results
-*[Dd]ebug/
-*[Dd]ebugPublic/
-*[Rr]elease/
-*[Rr]eleases/
-x64/
-x86/
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+/x64/
+/x86/
 build/
 bld/
 [Bb]in/
 [Oo]bj/
+# cbtest
+cbtest/*[Dd]ebug/
+cbtest/*[Rr]elease/
+cbtest/x64/
+cbtest/x86/
+cbtest/build/
+cbtest/bld/
+cbtest/[Bb]in/
+cbtest/[Oo]bj/
+
+# cbtest Package
+cbtest Package/*[Dd]ebug/
+cbtest Package/*[Rr]elease/
+cbtest Package/x64/
+cbtest Package/x86/
+cbtest Package/build/
+cbtest Package/bld/
+cbtest Package/[Bb]in/
+cbtest Package/[Oo]bj/
 
 # Roslyn cache directories
 *.ide/
@@ -164,6 +185,7 @@ ClientBin/
 *.pfx
 *.publishsettings
 node_modules/
+bower_components/
 
 # RIA/Silverlight projects
 Generated_Code/
@@ -187,50 +209,6 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
-
-# =========================
-# Operating System Files
-# =========================
-
-# OSX
-# =========================
-
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Icon must end with two \r
-Icon
-
-# Thumbnails
-._*
-
-# Files that might appear on external disk
-.Spotlight-V100
-.Trashes
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-# Windows
-# =========================
-
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
-
-# Folder config file
-Desktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
+wdbgark.VC.opendb
+*.db
+*.opendb

@@ -104,18 +104,32 @@ VOID CreateProcessNotifyRoutineEx(IN OUT PEPROCESS Process,
 
 VOID CreateProcessNotifyRoutineEx2(IN OUT PEPROCESS Process,
                                    IN HANDLE ProcessId,
-                                   IN OPTIONAL PPS_CREATE_NOTIFY_INFO CreateInfo) {
+                                   IN OPTIONAL PPS_CREATE_NOTIFY_INFO_EX CreateInfo) {
     PAGED_CODE();
 
-    DbgBreakPoint();
-
     if ( CreateInfo ) {
-        DbgPrint("%s called with Process = 0x%p, ProcessId = 0x%p, ImageFileName = %wZ, CommandLine = %wZ\n",
+        PUNICODE_STRING ImageFileName = (PUNICODE_STRING)CreateInfo->ImageFileName;
+        PUNICODE_STRING PicoName = NULL;
+        NTSTATUS status = STATUS_UNSUCCESSFUL;
+
+        if ( CreateInfo->Pico ) {
+            // "bash" always returns, because of fork(). try to update pico-process' name after callback
+            status = SeLocateProcessImageName(Process, &PicoName);
+
+            if ( NT_SUCCESS(status) && PicoName )
+                ImageFileName = PicoName;
+        }
+
+        DbgPrint("%s called with Process = 0x%p, ProcessId = 0x%p, ImageFileName = %wZ, CommandLine = %wZ, Pico = %d\n",
                  __FUNCTION__,
                  Process,
                  ProcessId,
-                 CreateInfo->ImageFileName,
-                 CreateInfo->CommandLine);
+                 ImageFileName,
+                 CreateInfo->CommandLine,
+                 CreateInfo->Pico);
+
+        if ( NT_SUCCESS(status) && PicoName )
+            ExFreePool(PicoName);   // !!! not RtlFreeUnicodeString !!!
     } else {
         DbgPrint("%s called with Process = 0x%p, ProcessId = 0x%p\n", __FUNCTION__, Process, ProcessId);
     }

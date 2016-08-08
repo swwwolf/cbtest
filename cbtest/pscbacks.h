@@ -11,6 +11,24 @@ typedef enum _PSCREATEPROCESSNOTIFYTYPE {
     PsCreateProcessNotifyPico = 0
 } PSCREATEPROCESSNOTIFYTYPE;
 
+typedef struct _PS_CREATE_NOTIFY_INFO_EX {
+    _In_ SIZE_T Size;
+    union {
+        _In_ ULONG Flags;
+        struct {
+            _In_ ULONG FileOpenNameAvailable : 1;
+            _In_ ULONG Reserved : 30;
+            _In_ ULONG Pico : 1;
+        };
+    };
+    _In_ HANDLE ParentProcessId;
+    _In_ CLIENT_ID CreatingThreadId;
+    _Inout_ struct _FILE_OBJECT *FileObject;
+    _In_ PCUNICODE_STRING ImageFileName;
+    _In_opt_ PCUNICODE_STRING CommandLine;
+    _Inout_ NTSTATUS CreationStatus;
+} PS_CREATE_NOTIFY_INFO_EX, *PPS_CREATE_NOTIFY_INFO_EX;
+
 typedef NTSTATUS (NTAPI* PSSETCREATEPROCESSNOTIFYROUTINEEX2_PROC)(
     IN PSCREATEPROCESSNOTIFYTYPE NotifyType,
     IN PVOID NotifyInformation,
@@ -28,10 +46,12 @@ extern "C" {
     //////////////////////////////////////////////////////////////////////////
     NTSTATUS SetRemoveCreateProcessNotifyRoutine(IN BOOLEAN IsRemove);
     VOID     CreateProcessNotifyRoutine(IN HANDLE ParentId, IN HANDLE ProcessId, IN BOOLEAN Create);
-    VOID     CreateProcessNotifyRoutineEx(IN OUT PEPROCESS Process, IN HANDLE ProcessId,
+    VOID     CreateProcessNotifyRoutineEx(IN OUT PEPROCESS Process,
+                                          IN HANDLE ProcessId,
                                           IN OPTIONAL PPS_CREATE_NOTIFY_INFO CreateInfo);
-    VOID     CreateProcessNotifyRoutineEx2(IN OUT PEPROCESS Process, IN HANDLE ProcessId,
-                                           IN OPTIONAL PPS_CREATE_NOTIFY_INFO CreateInfo);
+    VOID     CreateProcessNotifyRoutineEx2(IN OUT PEPROCESS Process,
+                                           IN HANDLE ProcessId,
+                                           IN OPTIONAL PPS_CREATE_NOTIFY_INFO_EX CreateInfo);
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
